@@ -31,6 +31,3 @@ por una propuesta aprobada en openspec/changes/.
 - /opsx:explore, /opsx:propose, /opsx:apply, /opsx:archive
 - ./mvnw test — suite completa
 - openspec validate <change-id> --strict — validar el cambio antes de pedir aprobación
-
-
-.

@@ -17,7 +17,7 @@ context: |
 
 rules:
   proposal:
-    - Además de las secciones propias de OpenSpec, incluir las de la plantilla de la empresa que falten: Change ID, Contratos afectados, Estrategia de testing, Componentes transversales involucrados y Aprobadores requeridos
+    - "Además de las secciones propias de OpenSpec, incluir las de la plantilla de la empresa que falten: Change ID, Contratos afectados, Estrategia de testing, Componentes transversales involucrados y Aprobadores requeridos"
     - El Change ID sigue el formato pedidos-api-<verbo>-<slug>
     - Indicar siempre qué queda fuera de alcance
   specs:
