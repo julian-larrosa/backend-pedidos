@@ -24,7 +24,9 @@ unitario) y consultarlos después por su identificador a través de la API `/api
 El sistema SHALL registrar un pedido cuando recibe `POST /api/v1/pedidos` con un cuerpo JSON que
 contiene un arreglo `lineas` con entre 1 y 100 líneas de pedido válidas. La respuesta MUST tener
 código 201, el header `Location` con la ruta `/api/v1/pedidos/{id}` del pedido creado y, en el
-cuerpo, el pedido con su `id`, sus líneas de pedido, el subtotal de cada una y el total.
+cuerpo, el pedido con su `id`, sus líneas de pedido, el subtotal de cada una y el total. Todos los
+importes de las respuestas (`precioUnitario`, `subtotal`, `total`) MUST tener exactamente 2
+decimales.
 
 #### Scenario: Registro exitoso de un pedido con dos líneas de pedido
 - **WHEN** el cliente envía `POST /api/v1/pedidos` con las líneas de pedido `{sku: "ABC-1", cantidad: 2, precioUnitario: 10.50}` y `{sku: "XYZ-9", cantidad: 1, precioUnitario: 3.00}`
@@ -44,15 +46,30 @@ cuerpo, el pedido con su `id`, sus líneas de pedido, el subtotal de cada una y 
 - **WHEN** el cliente envía `POST /api/v1/pedidos` con un cuerpo que no es JSON válido o con un campo de tipo incorrecto, por ejemplo `cantidad: "dos"`
 - **THEN** el sistema responde 400 con un ProblemDetail de `type` `urn:sagant:pedidos:solicitud-malformada`
 
+#### Scenario: Importes devueltos con 2 decimales
+- **WHEN** el cliente envía `POST /api/v1/pedidos` con una línea de pedido `{sku: "ABC-1", cantidad: 1, precioUnitario: 3}` y luego `GET /api/v1/pedidos/{id}` con el `id` recibido
+- **THEN** el `POST` responde 201 y el `GET` responde 200, y en ambas respuestas `precioUnitario`, `subtotal` y `total` son `3.00`
+
 ### Requirement: Validar cada línea de pedido
-El sistema MUST validar cada línea de pedido de `POST /api/v1/pedidos`: `sku` es un texto no vacío
-de hasta 64 caracteres, `cantidad` es un entero mayor o igual a 1 y `precioUnitario` es un decimal
-mayor que cero con a lo sumo 2 decimales. Si alguna línea de pedido no es válida, el sistema
-responde 400, rechaza el pedido completo e indica en el ProblemDetail cada campo inválido.
+El sistema MUST validar cada línea de pedido de `POST /api/v1/pedidos`: no es `null`, `sku` es un
+texto no vacío de hasta 64 caracteres, `cantidad` es un número JSON entero mayor o igual a 1 y
+`precioUnitario` es un decimal mayor que cero con a lo sumo 2 decimales. Si alguna línea de pedido
+no es válida, el sistema responde 400 y rechaza el pedido completo; con `type` `validacion`, el
+ProblemDetail indica cada campo inválido.
 
 #### Scenario: Línea de pedido en los límites válidos
 - **WHEN** el cliente envía `POST /api/v1/pedidos` con una línea de pedido con `sku` de 64 caracteres, `cantidad` 1 y `precioUnitario` 0.01
 - **THEN** el sistema responde 201 y registra el pedido
+
+#### Scenario: Línea de pedido nula
+- **WHEN** el cliente envía `POST /api/v1/pedidos` con `lineas: [null]`
+- **THEN** el sistema responde 400 con un ProblemDetail de `type` `urn:sagant:pedidos:validacion`
+- **AND** no se registra ningún pedido
+
+#### Scenario: Cantidad con decimales
+- **WHEN** el cliente envía `POST /api/v1/pedidos` con una línea de pedido con `cantidad` 2.5
+- **THEN** el sistema responde 400 con un ProblemDetail de `type` `urn:sagant:pedidos:solicitud-malformada`
+- **AND** no se registra ningún pedido
 
 #### Scenario: Cantidad menor que 1
 - **WHEN** el cliente envía `POST /api/v1/pedidos` con una línea de pedido con `cantidad` 0

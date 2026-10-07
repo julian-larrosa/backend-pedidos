@@ -35,6 +35,17 @@ después, que es la base sobre la que se construirá el resto del servicio.
 - La comparación de SKU distingue mayúsculas y minúsculas.
 - La persistencia es la base H2 del entorno de práctica; los pedidos no sobreviven a un
   reinicio.
+- Una línea de pedido `null` dentro de `lineas` se rechaza con 400 `validacion`.
+- Todos los importes de las respuestas (`precioUnitario`, `subtotal` y `total`) se devuelven con
+  exactamente 2 decimales, tanto en el `POST` como en el `GET`.
+- Una `cantidad` con parte decimal (por ejemplo, 2.5) se rechaza con 400.
+
+### Supuestos pendientes de confirmar
+
+- Una `cantidad` con parte decimal se rechaza con `type` `urn:sagant:pedidos:solicitud-malformada`,
+  no con `validacion` (justificación en design.md).
+- También se rechaza una `cantidad` escrita como decimal aunque su valor sea entero (por ejemplo,
+  `2.0`): solo se acepta un número JSON entero.
 
 ### Fuera de alcance
 
