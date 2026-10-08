@@ -3,12 +3,12 @@
 ## 1. Preparación
 
 - [x] 1.1 Crear la branch `change/pedidos-api-add-registro-pedidos` desde `main` y verificar con `git branch --show-current`
-- [ ] 1.2 Agregar `spring.jpa.open-in-view=false` en `src/main/resources/application.properties` y verificar que `./mvnw test` sigue en verde y que el log de arranque ya no muestra el warning de open-in-view
+- [x] 1.2 Agregar `spring.jpa.open-in-view=false` en `src/main/resources/application.properties` y verificar que `./mvnw test` sigue en verde y que el log de arranque ya no muestra el warning de open-in-view
 
 ## 2. Manejo de errores centralizado
 
-- [ ] 2.1 Crear `com.sagant.pedidos.error` con las constantes de `type` (`validacion`, `solicitud-malformada`, `sku-duplicado`, `pedido-no-encontrado`) y el `@RestControllerAdvice` único que mapea validación y cuerpo o parámetro malformado a ProblemDetail; verificar que compila con `./mvnw test`
-- [ ] 2.2 Agregar a `@RestControllerAdvice` los mapeos de `SkuDuplicadoException` (con la extensión `sku`) y `PedidoNoEncontradoException`; verificar con los tests de los grupos 4 y 5, que cubren cada `type`
+- [x] 2.1 Crear `com.sagant.pedidos.error` con las constantes de `type` (`validacion`, `solicitud-malformada`, `sku-duplicado`, `pedido-no-encontrado`) y el `@RestControllerAdvice` único que mapea validación y cuerpo o parámetro malformado a ProblemDetail; verificar que compila con `./mvnw test`
+- [ ] 2.2 Agregar a `@RestControllerAdvice` los mapeos de `SkuDuplicadoException` (con la extensión `sku`) y `PedidoNoEncontradoException`; verificar con los tests 5.7 ("Pedido con SKU repetido") y 6.3 ("Consulta de un pedido inexistente"), que cubren cada `type`
 
 ## 3. Modelo y persistencia
 
